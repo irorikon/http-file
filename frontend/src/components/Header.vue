@@ -1,64 +1,79 @@
 <!--
  * @Author: iRorikon
  * @Date: 2023-04-03 21:19:18
- * @FilePath: \http-file\src\components\Header.vue
+ * @FilePath: \http-file\frontend\src\components\Header.vue
 -->
 <template>
-  <div class="dheader-1">
-    <img
-      class="logo-devui"
-      src="https://devui.design/components/assets/logo.svg"
-      alt=""
-    />
-    <span class="text">DevUI</span>
-    <div class="right-search-box">
-      <d-search icon-position="left" no-border style="width: 100%"></d-search>
-    </div>
-    <d-button @click="handleClick" class="right-buton">上传文件</d-button>
-    <d-modal v-model="visible" style="width: auto; height: auto">
-      <div class="modal">
-        <d-upload
-          class="upload-box"
-          v-model="uploadedFiles"
-          :upload-options="uploadOptions"
-          droppable
-          :on-success="onSuccess"
-          :on-error="onError"
-          :on-progress="onProgress"
-          @file-drop="fileDrop"
-          @file-select="fileSelect"
-        >
-          <div class="upload-trigger">
-            <div><d-icon name="upload" size="24px"></d-icon></div>
-            <div style="margin-top: 20px">
-              将文件拖到此处，或
-              <span class="link">点击上传</span>
-            </div>
-          </div>
-          <template v-slot:uploaded-files="slotProps">
-            <table
-              class="table uploaded-files"
-              v-if="slotProps.uploadedFiles.length > 0"
-            >
-              <tbody>
-                <tr
-                  v-for="(uploadedFile, index) in slotProps.uploadedFiles"
-                  :key="index"
-                  class="row"
-                >
-                  <td width="75%">
-                    <span>{{ uploadedFile.name }}</span>
-                  </td>
-                  <td width="25%">
-                    <span>上传成功</span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </template>
-        </d-upload>
+  <div>
+    <div class="dheader-1">
+      <img
+        class="logo-devui"
+        src="https://devui.design/components/assets/logo.svg"
+        alt=""
+      />
+      <span class="text">DevUI</span>
+      <div class="right-search-box">
+        <d-search
+          icon-position="left"
+          no-border
+          style="width: 100%"
+          :hidden="isMobile"
+        ></d-search>
       </div>
-    </d-modal>
+      <d-button @click="handleClick" class="right-buton">上传文件</d-button>
+      <d-modal v-model="visible" style="width: auto; height: auto">
+        <div class="modal">
+          <d-upload
+            class="upload-box"
+            v-model="uploadedFiles"
+            :upload-options="uploadOptions"
+            droppable
+            :on-success="onSuccess"
+            :on-error="onError"
+            :on-progress="onProgress"
+            @file-drop="fileDrop"
+            @file-select="fileSelect"
+          >
+            <div class="upload-trigger">
+              <div><d-icon name="upload" size="24px"></d-icon></div>
+              <div style="margin-top: 20px">
+                将文件拖到此处，或
+                <span class="link">点击上传</span>
+              </div>
+            </div>
+            <template v-slot:uploaded-files="slotProps">
+              <table
+                class="table uploaded-files"
+                v-if="slotProps.uploadedFiles.length > 0"
+              >
+                <tbody>
+                  <tr
+                    v-for="(uploadedFile, index) in slotProps.uploadedFiles"
+                    :key="index"
+                    class="row"
+                  >
+                    <td width="75%">
+                      <span>{{ uploadedFile.name }}</span>
+                    </td>
+                    <td width="25%">
+                      <span>上传成功</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </template>
+          </d-upload>
+        </div>
+      </d-modal>
+    </div>
+    <div class="right-search-box">
+      <d-search
+        icon-position="left"
+        no-border
+        style="width: 100%"
+        :hidden="!isMobile"
+      ></d-search>
+    </div>
   </div>
 </template>
 <script>
@@ -73,13 +88,28 @@ const visible = ref(false);
 const handleClick = () => {
   visible.value = true;
 };
+const isMobile = ref(false);
 const hidden = () => {
   visible.value = false;
 };
 
+const initPage = () => {
+  const screenWidth = document.body.clientWidth;
+  if (screenWidth < 1000) {
+    isMobile.value = true;
+  } else if (screenWidth >= 1000 && screenWidth < 1200) {
+    isMobile.value = false;
+  } else {
+    isMobile.value = false;
+  }
+  console.log("URL:", document.URL);
+};
+initPage();
+
 const uploadedFiles = [];
 const uploadOptions = {
-  uri: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
+  uri: document.URL,
+  method: "POST",
 };
 const onSuccess = (res) => {
   notifyMsg.title = "上传成功";
