@@ -1,4 +1,9 @@
-package service
+/*
+ * @Author: iRorikon
+ * @Date: 2023-04-05 14:34:06
+ * @FilePath: \http-file\backend\service\system\system.go
+ */
+package system
 
 import (
 	"github.com/irorikon/http-file/config"

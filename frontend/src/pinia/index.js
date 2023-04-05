@@ -1,7 +1,7 @@
 /*
  * @Author: iRorikon
- * @Date: 2023-04-05 15:56:26
- * @FilePath: \http-file\frontend\src\pinia\index.js
+ * @Date: 2023-04-05 19:38:36
+ * @FilePath: \http-file-web\src\pinia\index.js
  */
 import { createPinia } from 'pinia'
 

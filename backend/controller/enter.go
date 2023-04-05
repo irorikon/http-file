@@ -5,16 +5,20 @@
  */
 package controller
 
-import "github.com/irorikon/http-file/service"
-
-var (
-	systemService = service.ServiceGroupAPP.SystemService
-	fileService   = service.ServiceGroupAPP.FileService
+import (
+	"github.com/irorikon/http-file/controller/storage"
+	"github.com/irorikon/http-file/controller/system"
+	"github.com/irorikon/http-file/service"
 )
 
-type EnterController struct {
-	SystemController
-	FileController
+var (
+	systemService = service.ServiceGroupAPP.SystemServiceGroup
+	fileService   = service.ServiceGroupAPP.StorageServiceGroup
+)
+
+type ControllerGroup struct {
+	SystemController system.ControllerGroup
+	FileController   storage.ControllerGroup
 }
 
-var ControllerAPP = new(EnterController)
+var ControllerAPP = new(ControllerGroup)

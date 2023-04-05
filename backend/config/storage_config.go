@@ -6,6 +6,7 @@
 package config
 
 type StorageConfig struct {
-	Type string `mapstructure:"type" json:"type" yaml:"type"`
-	Path string `mapstructure:"path" json:"path" yaml:"path"`
+	Type       string `mapstructure:"type" json:"type" yaml:"type"`
+	ShowHidden bool   `mapstructure:"show_hidden" json:"show_hidden" yaml:"show_hidden"`
+	Path       string `mapstructure:"path" json:"path" yaml:"path"`
 }

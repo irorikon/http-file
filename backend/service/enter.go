@@ -5,9 +5,14 @@
  */
 package service
 
+import (
+	"github.com/irorikon/http-file/service/storage"
+	"github.com/irorikon/http-file/service/system"
+)
+
 type ServiceGroup struct {
-	SystemService
-	FileService
+	SystemServiceGroup  system.ServiceGroup
+	StorageServiceGroup storage.ServiceGroup
 }
 
 var ServiceGroupAPP = new(ServiceGroup)

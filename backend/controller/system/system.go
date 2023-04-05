@@ -1,9 +1,9 @@
 /*
  * @Author: iRorikon
  * @Date: 2023-04-05 02:04:58
- * @FilePath: \http-file\backend\controller\system.go
+ * @FilePath: \http-file\backend\controller\system\system.go
  */
-package controller
+package system
 
 import (
 	"github.com/gin-gonic/gin"

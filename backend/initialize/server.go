@@ -16,6 +16,7 @@ import (
 
 type server interface {
 	ListenAndServe() error
+	ListenAndServeTLS(string, string) error
 }
 
 func RunServer() {
@@ -33,5 +34,8 @@ func RunServer() {
 
 	time.Sleep(10 * time.Microsecond)
 	config.Log.Info("server run success on ", zap.String("address", address))
+	if config.CFG.Server.TLS {
+		config.Log.Error(s.ListenAndServeTLS(config.CFG.Server.CertFile, config.CFG.Server.KeyFile).Error())
+	}
 	config.Log.Error(s.ListenAndServe().Error())
 }

@@ -1,3 +1,8 @@
+/*
+ * @Author: iRorikon
+ * @Date: 2023-04-05 02:16:22
+ * @FilePath: \http-file\backend\initialize\viper.go
+ */
 package initialize
 
 import (
@@ -7,6 +12,7 @@ import (
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/irorikon/http-file/config"
+	"github.com/irorikon/http-file/util"
 	"github.com/songzhibin97/gkit/cache/local_cache"
 	"github.com/spf13/viper"
 )
@@ -27,6 +33,21 @@ func Viper(path ...string) *viper.Viper {
 	} else {
 		fmt.Printf("您正在使用命令行的 -c 参数传递的值, config 的路径为: %v\n", c)
 	}
+
+	if !util.FileExist(c) {
+		fmt.Printf("file not exist: %s", c)
+		// 文件不存在，创建文件
+		f, err := util.CreatNestedFile(c)
+		if err != nil {
+			panic(err)
+		}
+		defer f.Close()
+		err = util.WriteYamlToFile(c, config.DefaultConfig())
+		if err != nil {
+			panic(err)
+		}
+	}
+
 	v := viper.New()
 	v.SetConfigFile(c)
 	v.SetConfigType("yaml")

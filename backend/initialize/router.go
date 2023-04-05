@@ -22,13 +22,21 @@ func Routers() *gin.Engine {
 	Router.StaticFile("/", "./templates/index.html") // 前端网页入口页面
 
 	// TLS
-	// Router.Use(middleware.LoadTLS())
+	// 如果需要使用 https 请打开此中间件
+	// 然后前往 core/server.go 将启动模式更变为 Router.RunTLS("端口","你的cre/pem文件","你的key文件")
+	if config.CFG.Server.TLS {
+		if config.CFG.Server.KeyFile != "" && config.CFG.Server.CertFile != "" {
+			Router.Use(middleware.LoadTLS())
+		} else {
+			config.CFG.Server.TLS = false
+		}
+	}
 	// 跨域，如需跨域可以打开下面的注释
 	// 直接放行全部跨域请求
-	Router.Use(middleware.CORS())
-	config.Log.Info("use middleware cors")
+	// Router.Use(middleware.CORS())
 	// 按照配置的规则放行跨域请求
-	// Router.Use(middleware.CORSByRules())
+	Router.Use(middleware.CORSByRules())
+	config.Log.Info("use middleware cors")
 
 	PublicGroup := Router.Group("")
 	{
@@ -36,8 +44,8 @@ func Routers() *gin.Engine {
 		PublicGroup.GET("/health", func(c *gin.Context) {
 			c.JSON(200, "ok")
 		})
-		PublicGroup.GET("/info", controller.ControllerAPP.GetSystemConfig)
-		PublicGroup.POST("/path", controller.ControllerAPP.GetFileList)
+		PublicGroup.GET("/info", controller.ControllerAPP.SystemController.GetSystemConfig)
+		// PublicGroup.POST("/path", controller.ControllerAPP.GetFileList)
 	}
 
 	config.Log.Info("router init success")

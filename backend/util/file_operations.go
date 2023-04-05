@@ -1,11 +1,13 @@
 /*
  * @Author: iRorikon
  * @Date: 2023-04-04 17:15:36
- * @FilePath: \backend\util\file_operations.go
+ * @FilePath: \http-file\backend\util\file_operations.go
  */
 package util
 
 import (
+	"fmt"
+	"io"
 	"os"
 	"path"
 	"path/filepath"
@@ -80,6 +82,29 @@ func FileExist(path string) bool {
 	return !os.IsNotExist(err)
 }
 
+// DirExist 判断目录是否存在
+func DirExist(path string) bool {
+	fi, err := os.Lstat(path)
+	if err == nil {
+		return fi.IsDir()
+	}
+	return !os.IsNotExist(err)
+}
+
+// 嵌套创建文件
+func CreatNestedFile(path string) (*os.File, error) {
+	basePath := filepath.Dir(path)
+	if !FileExist(basePath) {
+		err := os.MkdirAll(basePath, 0700)
+		if err != nil {
+			// log.Errorf("无法创建目录，%s", err)
+			fmt.Printf("cannot create dir %s, Error: %v\n", basePath, err)
+			return nil, err
+		}
+	}
+	return os.Create(path)
+}
+
 // GetFileType get file type
 func GetFileType(filename string) int {
 	ext := strings.ToLower(Ext(filename))
@@ -104,4 +129,62 @@ func Ext(p string) string {
 		return ext[1:]
 	}
 	return ext
+}
+
+// CopyFile File copies a single file from src to dst
+func CopyFile(src, dst string) error {
+	var err error
+	var srcfd *os.File
+	var dstfd *os.File
+	var srcinfo os.FileInfo
+
+	if srcfd, err = os.Open(src); err != nil {
+		return err
+	}
+	defer srcfd.Close()
+
+	if dstfd, err = CreatNestedFile(dst); err != nil {
+		return err
+	}
+	defer dstfd.Close()
+
+	if _, err = io.Copy(dstfd, srcfd); err != nil {
+		return err
+	}
+	if srcinfo, err = os.Stat(src); err != nil {
+		return err
+	}
+	return os.Chmod(dst, srcinfo.Mode())
+}
+
+// CopyDir Dir copies a whole directory recursively
+func CopyDir(src, dst string) error {
+	var err error
+	var fds []os.DirEntry
+	var srcinfo os.FileInfo
+
+	if srcinfo, err = os.Stat(src); err != nil {
+		return err
+	}
+	if err = os.MkdirAll(dst, srcinfo.Mode()); err != nil {
+		return err
+	}
+	if fds, err = os.ReadDir(src); err != nil {
+		return err
+	}
+	for _, fd := range fds {
+		srcfp := path.Join(src, fd.Name())
+		dstfp := path.Join(dst, fd.Name())
+
+		if fd.IsDir() {
+			if err = CopyDir(srcfp, dstfp); err != nil {
+				fmt.Println(err)
+			}
+		} else {
+			if err = CopyFile(srcfp, dstfp); err != nil {
+				fmt.Println(err)
+			}
+		}
+	}
+	return nil
 }

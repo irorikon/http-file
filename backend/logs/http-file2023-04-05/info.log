@@ -1,0 +1,9 @@
+{"level":"info","time":"[HTTP-FILE]2023/04/05 - 21:27:26.619","caller":"D:/Project/http-file/backend/initialize/router.go:29","msg":"use middleware cors"}
+{"level":"info","time":"[HTTP-FILE]2023/04/05 - 21:27:26.626","caller":"D:/Project/http-file/backend/initialize/router.go:43","msg":"router init success"}
+{"level":"info","time":"[HTTP-FILE]2023/04/05 - 21:27:26.630","caller":"D:/Project/http-file/backend/initialize/server.go:35","msg":"server run success on ","address":"0.0.0.0:5244"}
+{"level":"info","time":"[HTTP-FILE]2023/04/05 - 22:38:14.874","caller":"D:/Project/http-file/backend/initialize/router.go:29","msg":"use middleware cors"}
+{"level":"info","time":"[HTTP-FILE]2023/04/05 - 22:38:14.880","caller":"D:/Project/http-file/backend/initialize/router.go:43","msg":"router init success"}
+{"level":"info","time":"[HTTP-FILE]2023/04/05 - 22:38:14.889","caller":"D:/Project/http-file/backend/initialize/server.go:35","msg":"server run success on ","address":"0.0.0.0:5244"}
+{"level":"info","time":"[HTTP-FILE]2023/04/05 - 23:10:14.328","caller":"D:/Project/http-file/backend/initialize/router.go:39","msg":"use middleware cors"}
+{"level":"info","time":"[HTTP-FILE]2023/04/05 - 23:10:14.334","caller":"D:/Project/http-file/backend/initialize/router.go:51","msg":"router init success"}
+{"level":"info","time":"[HTTP-FILE]2023/04/05 - 23:10:14.347","caller":"D:/Project/http-file/backend/initialize/server.go:36","msg":"server run success on ","address":"0.0.0.0:5244"}
