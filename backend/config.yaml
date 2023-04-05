@@ -52,7 +52,6 @@ storage:
 zap:
     level: debug
     prefix: '[HTTP-FILE]'
-    file_prefix: http-file
     format: json
     director: logs
     encode_level: LowercaseLevelEncoder

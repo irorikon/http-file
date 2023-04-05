@@ -1,7 +1,7 @@
 /*
  * @Author: iRorikon
  * @Date: 2023-04-04 17:56:02
- * @FilePath: \backend\config\zap_config.go
+ * @FilePath: \http-file\backend\config\zap_config.go
  */
 package config
 
@@ -14,7 +14,6 @@ import (
 type ZapConfig struct {
 	Level         string `mapstructure:"level" json:"level" yaml:"level"`
 	Prefix        string `mapstructure:"prefix" json:"prefix" yaml:"prefix"`
-	FilePrefix    string `mapstructure:"file_prefix" json:"file_prefix" yaml:"file_prefix"`
 	Format        string `mapstructure:"format" json:"format" yaml:"format"`
 	Director      string `mapstructure:"director" json:"director" yaml:"director"`
 	EncodeLevel   string `mapstructure:"encode_level" json:"encode_level" yaml:"encode_level"`

@@ -101,7 +101,6 @@ func DefaultConfig() *Config {
 		Zap: ZapConfig{
 			Level:         "debug",
 			Prefix:        "[HTTP-FILE]",
-			FilePrefix:    "http-file",
 			Format:        "json",
 			Director:      "logs",
 			EncodeLevel:   "LowercaseLevelEncoder",
