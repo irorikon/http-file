@@ -1,0 +1,40 @@
+[github.com/irorikon/http-file]2023/04/05 - 03:16:26.655	[34minfo[0m	D:/Project/http-file/backend/initialize/router.go:28	use middleware cors
+[github.com/irorikon/http-file]2023/04/05 - 03:16:26.662	[34minfo[0m	D:/Project/http-file/backend/initialize/router.go:40	router init success
+[github.com/irorikon/http-file]2023/04/05 - 03:17:53.225	[34minfo[0m	D:/Project/http-file/backend/initialize/router.go:28	use middleware cors
+[github.com/irorikon/http-file]2023/04/05 - 03:17:53.231	[34minfo[0m	D:/Project/http-file/backend/initialize/router.go:40	router init success
+[github.com/irorikon/http-file]2023/04/05 - 03:17:53.239	[34minfo[0m	D:/Project/http-file/backend/initialize/server.go:35	server run success on 	{"address": "0.0.0.0:5244"}
+[github.com/irorikon/http-file]2023/04/05 - 03:18:06.521	[34minfo[0m	D:/Project/http-file/backend/initialize/router.go:28	use middleware cors
+[github.com/irorikon/http-file]2023/04/05 - 03:18:06.528	[34minfo[0m	D:/Project/http-file/backend/initialize/router.go:40	router init success
+[github.com/irorikon/http-file]2023/04/05 - 03:18:06.542	[34minfo[0m	D:/Project/http-file/backend/initialize/server.go:35	server run success on 	{"address": "0.0.0.0:5244"}
+[github.com/irorikon/http-file]2023/04/05 - 03:20:07.476	[34minfo[0m	D:/Project/http-file/backend/initialize/router.go:28	use middleware cors
+[github.com/irorikon/http-file]2023/04/05 - 03:20:07.483	[34minfo[0m	D:/Project/http-file/backend/initialize/router.go:40	router init success
+[github.com/irorikon/http-file]2023/04/05 - 03:20:07.495	[34minfo[0m	D:/Project/http-file/backend/initialize/server.go:35	server run success on 	{"address": "0.0.0.0:5244"}
+[github.com/irorikon/http-file]2023/04/05 - 03:20:38.510	[34minfo[0m	D:/Project/http-file/backend/initialize/router.go:28	use middleware cors
+[github.com/irorikon/http-file]2023/04/05 - 03:20:38.515	[34minfo[0m	D:/Project/http-file/backend/initialize/router.go:40	router init success
+[github.com/irorikon/http-file]2023/04/05 - 03:20:38.517	[34minfo[0m	D:/Project/http-file/backend/initialize/server.go:35	server run success on 	{"address": "0.0.0.0:5244"}
+[http-file]2023/04/05 - 15:35:27.825	[34minfo[0m	D:/Project/http-file/backend/initialize/router.go:28	use middleware cors
+[http-file]2023/04/05 - 15:35:27.836	[34minfo[0m	D:/Project/http-file/backend/initialize/router.go:40	router init success
+[http-file]2023/04/05 - 15:36:42.461	[34minfo[0m	D:/Project/http-file/backend/initialize/router.go:28	use middleware cors
+[http-file]2023/04/05 - 15:36:42.473	[34minfo[0m	D:/Project/http-file/backend/initialize/router.go:40	router init success
+[http-file]2023/04/05 - 15:36:42.481	[34minfo[0m	D:/Project/http-file/backend/initialize/server.go:35	server run success on 	{"address": "0.0.0.0:5244"}
+[http-file]2023/04/05 - 15:38:49.129	[34minfo[0m	D:/Project/http-file/backend/initialize/router.go:28	use middleware cors
+[http-file]2023/04/05 - 15:38:49.141	[34minfo[0m	D:/Project/http-file/backend/initialize/router.go:40	router init success
+[http-file]2023/04/05 - 15:38:49.149	[34minfo[0m	D:/Project/http-file/backend/initialize/server.go:35	server run success on 	{"address": "0.0.0.0:5244"}
+[http-file]2023/04/05 - 15:43:10.511	[34minfo[0m	D:/Project/http-file/backend/initialize/router.go:29	use middleware cors
+[http-file]2023/04/05 - 15:43:10.524	[34minfo[0m	D:/Project/http-file/backend/initialize/router.go:42	router init success
+[http-file]2023/04/05 - 15:43:10.535	[34minfo[0m	D:/Project/http-file/backend/initialize/server.go:35	server run success on 	{"address": "0.0.0.0:5244"}
+[http-file]2023/04/05 - 15:47:35.390	[34minfo[0m	D:/Project/http-file/backend/initialize/router.go:29	use middleware cors
+[http-file]2023/04/05 - 15:47:35.406	[34minfo[0m	D:/Project/http-file/backend/initialize/router.go:42	router init success
+[http-file]2023/04/05 - 15:47:35.414	[34minfo[0m	D:/Project/http-file/backend/initialize/server.go:35	server run success on 	{"address": "0.0.0.0:5244"}
+[http-file]2023/04/05 - 16:20:49.200	[34minfo[0m	D:/Project/http-file/backend/initialize/router.go:29	use middleware cors
+[http-file]2023/04/05 - 16:20:49.213	[34minfo[0m	D:/Project/http-file/backend/initialize/router.go:42	router init success
+[http-file]2023/04/05 - 16:20:49.225	[34minfo[0m	D:/Project/http-file/backend/initialize/server.go:35	server run success on 	{"address": "0.0.0.0:5244"}
+[http-file]2023/04/05 - 16:29:55.643	[34minfo[0m	D:/Project/http-file/backend/initialize/router.go:29	use middleware cors
+[http-file]2023/04/05 - 16:29:55.659	[34minfo[0m	D:/Project/http-file/backend/initialize/router.go:43	router init success
+[http-file]2023/04/05 - 16:29:55.662	[34minfo[0m	D:/Project/http-file/backend/initialize/server.go:35	server run success on 	{"address": "0.0.0.0:5244"}
+[http-file]2023/04/05 - 16:30:56.761	[34minfo[0m	D:/Project/http-file/backend/initialize/router.go:29	use middleware cors
+[http-file]2023/04/05 - 16:30:56.774	[34minfo[0m	D:/Project/http-file/backend/initialize/router.go:43	router init success
+[http-file]2023/04/05 - 16:30:56.785	[34minfo[0m	D:/Project/http-file/backend/initialize/server.go:35	server run success on 	{"address": "0.0.0.0:5244"}
+[http-file]2023/04/05 - 16:35:43.494	[34minfo[0m	D:/Project/http-file/backend/initialize/router.go:29	use middleware cors
+[http-file]2023/04/05 - 16:35:43.508	[34minfo[0m	D:/Project/http-file/backend/initialize/router.go:43	router init success
+[http-file]2023/04/05 - 16:35:43.521	[34minfo[0m	D:/Project/http-file/backend/initialize/server.go:35	server run success on 	{"address": "0.0.0.0:5244"}

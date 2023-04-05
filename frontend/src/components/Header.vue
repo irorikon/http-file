@@ -1,79 +1,66 @@
 <!--
  * @Author: iRorikon
- * @Date: 2023-04-03 21:19:18
+ * @Date: 2023-04-04 22:47:00
  * @FilePath: \http-file\frontend\src\components\Header.vue
 -->
 <template>
   <div>
-    <div class="dheader-1">
-      <img
-        class="logo-devui"
-        src="https://devui.design/components/assets/logo.svg"
-        alt=""
-      />
-      <span class="text">DevUI</span>
-      <div class="right-search-box">
-        <d-search
-          icon-position="left"
-          no-border
-          style="width: 100%"
-          :hidden="isMobile"
-        ></d-search>
-      </div>
-      <d-button @click="handleClick" class="right-buton">上传文件</d-button>
-      <d-modal v-model="visible" style="width: auto; height: auto">
-        <div class="modal">
-          <d-upload
-            class="upload-box"
-            v-model="uploadedFiles"
-            :upload-options="uploadOptions"
-            droppable
-            :on-success="onSuccess"
-            :on-error="onError"
-            :on-progress="onProgress"
-            @file-drop="fileDrop"
-            @file-select="fileSelect"
+    <div class="header">
+      <router-link to="/">
+        <img
+          v-if="info.logo"
+          :src="info.logo"
+          alt="AList"
+          style="height: 35px; width: auto"
+          id="logo"
+        />
+        <a-spin v-else />
+      </router-link>
+      <a-space>
+        <a-space v-if="type === 'folder'">
+          <a-input-search
+            :value="keyword"
+            placeholder="搜索文件(夹)"
+            style="width: 200px"
+            @search="onSearch"
+          />
+        </a-space>
+        <a-space v-if="isImages">
+          <a-button
+            type="primary"
+            shape="circle"
+            size="large"
+            @click="switchShow"
           >
-            <div class="upload-trigger">
-              <div><d-icon name="upload" size="24px"></d-icon></div>
-              <div style="margin-top: 20px">
-                将文件拖到此处，或
-                <span class="link">点击上传</span>
-              </div>
-            </div>
-            <template v-slot:uploaded-files="slotProps">
-              <table
-                class="table uploaded-files"
-                v-if="slotProps.uploadedFiles.length > 0"
-              >
-                <tbody>
-                  <tr
-                    v-for="(uploadedFile, index) in slotProps.uploadedFiles"
-                    :key="index"
-                    class="row"
-                  >
-                    <td width="75%">
-                      <span>{{ uploadedFile.name }}</span>
-                    </td>
-                    <td width="25%">
-                      <span>上传成功</span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </template>
-          </d-upload>
-        </div>
-      </d-modal>
+            <template #icon><retweet /></template>
+          </a-button>
+        </a-space>
+        <a-space v-if="type === 'file'">
+          <a-button
+            type="primary"
+            shape="circle"
+            size="large"
+            @click="copyFileLink"
+          >
+            <template #icon><copy /></template>
+          </a-button>
+          <a target="_blank" :href="downloadUrl">
+            <a-button type="primary" shape="circle" size="large">
+              <template #icon><download /></template>
+            </a-button>
+          </a>
+        </a-space>
+        <a-popover title="二维码" class="qrcode">
+          <template #content>
+            <img :src="'https://api.xhofe.top/qr?size=200&text=' + url" />
+          </template>
+          <a-button type="primary" shape="circle" size="large">
+            <template #icon><component :is="'qr-code'" /></template>
+          </a-button>
+        </a-popover>
+      </a-space>
     </div>
-    <div class="right-search-box">
-      <d-search
-        icon-position="left"
-        no-border
-        style="width: 100%"
-        :hidden="!isMobile"
-      ></d-search>
-    </div>
+    <a-divider class="header-content" />
   </div>
 </template>
 <script>
@@ -82,144 +69,58 @@ export default {
 };
 </script>
 <script setup>
-import { ref, defineComponent, reactive, watch } from "vue";
-import { NotificationService } from "#/vue-devui/notification";
-const visible = ref(false);
-const handleClick = () => {
-  visible.value = true;
-};
-const isMobile = ref(false);
-const hidden = () => {
-  visible.value = false;
-};
+import { GlobalDataProps } from "../store";
+import { computed, defineComponent, ref, watch } from "vue";
+import { useStore } from "vuex";
+import { useRoute, useRouter } from "vue-router";
+import useDownloadUrl from "../hooks/useDownloadUrl";
+import "viewerjs/dist/viewer.css";
+import Viewer from "viewerjs";
 
-const initPage = () => {
-  const screenWidth = document.body.clientWidth;
-  if (screenWidth < 1000) {
-    isMobile.value = true;
-  } else if (screenWidth >= 1000 && screenWidth < 1200) {
-    isMobile.value = false;
-  } else {
-    isMobile.value = false;
+const store = useStore();
+const route = useRoute();
+const router = useRouter();
+const info = computed(() => store.state.info);
+const url = ref(window.location.href);
+watch(
+  () => route.fullPath,
+  () => {
+    url.value = window.location.href;
   }
-  console.log("URL:", document.URL);
+);
+const type = computed(() => store.state.type);
+const { downloadUrl, copyFileLink } = useDownloadUrl();
+const keyword = ref("");
+const onSearch = (searchValue) => {
+  router.push(route.path + "?q=" + searchValue);
 };
-initPage();
-
-const uploadedFiles = [];
-const uploadOptions = {
-  uri: document.URL,
-  method: "POST",
-};
-const onSuccess = (res) => {
-  notifyMsg.title = "上传成功";
-  notifyMsg.content = "文件上传成功: " + res.file.name;
-  notifyMsg.type = "success";
-  showService(notifyMsg);
-};
-const onError = (err) => {
-  console.log("err", err);
-  notifyMsg.title = "上传失败";
-  notifyMsg.content = "文件上传失败: " + err.file.name;
-  notifyMsg.type = "error";
-  showService(notifyMsg);
-};
-const onProgress = (selectFile, uploadedFiles) => {
-  console.log("selectFile: ", selectFile);
-  console.log("uploadedFiles: ", uploadedFiles);
-};
-const fileDrop = (file) => {
-  for (let i = 0; i < file.length; i++) {
-    console.log("filesize", file[i].size);
-    const isLt2M = file[i].size / 1024 / 1024 < 2;
-    if (!isLt2M) {
-      notifyMsg.title = "上传失败";
-      notifyMsg.content = "文件大小不能超过 2MB!";
-      notifyMsg.type = "warning";
-      showService(notifyMsg);
-    }
+const isImages = computed(() => store.state.isImages);
+const switchShow = () => {
+  store.commit("setShowImages", !store.state.showImages);
+  if (store.state.showImages) {
+    setTimeout(() => {
+      const images = document.getElementById("images");
+      if (images) {
+        new Viewer(images);
+      }
+    }, 100);
   }
-};
-const fileSelect = (file) => {
-  for (let i = 0; i < file.length; i++) {
-    console.log("filesize", file[i].size);
-    const isLt2M = file[i].size / 1024 / 1024 < 2;
-    if (!isLt2M) {
-      notifyMsg.title = "上传失败";
-      notifyMsg.content = "文件大小不能超过 2MB!";
-      notifyMsg.type = "warning";
-      showService(notifyMsg);
-    }
-  }
-};
-watch(uploadedFiles, (newValue, oldValue) => {
-  console.log("uploadedFiles", {
-    newValue,
-    oldValue,
-  });
-});
-const notifyMsg = {
-  title: "",
-  content: "",
-  type: "",
-};
-const showService = (msg) => {
-  NotificationService.open(msg);
 };
 </script>
 <style lang="sass" scoped>
-.dheader-1
-  text-align: left
-  position: relative
-  height: 60px
-  background-color: #333854
-  color: #fffS
-.dheader-1
-  position: relative
-  height: 60px
+.header
+  padding-top: 3px
+  height: 56px
+  width: 100%
   display: flex
-  align-items: center
-  background-color: #333854
-  .logo-devui
-    width: 48px
-    height: 48px
-    margin: 0 10px
-  .text
-    color: #fff
-    font-size: 24px
-  .right-search-box
-    margin-left: auto
-    text-align: right
-    margin-right: 10px
-    cursor: pointer
-  .right-buton
-    color: #fff
-    font-size: 20px
-    text-align: right
-    margin-right: 10px
-    cursor: pointer
-    background-color: #333854
-
-.upload-box .upload-trigger
-  background-color: #fff
-  border: 1px dashed #d9d9d9
-  border-radius: 6px
-  box-sizing: border-box
-  width: 600px
-  height: 300px
-  text-align: center
-  cursor: pointer
-  position: relative
-  overflow: hidden
-  display: flex
-  flex-direction: column
-  justify-content: center
+  display: -webkit-flex
+  justify-content: space-between
   align-items: center
 
-  & .link
-    color: #5e7ce0
-.modal
-  display: flex
-  justify-content: center
-  align-items: center
+  &-content
+    margin: 10px 0 5px 0
+
+@media screen and (max-width: 600px)
+  .qrcode
+    display: none
 </style>

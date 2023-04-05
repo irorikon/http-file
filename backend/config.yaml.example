@@ -1,0 +1,76 @@
+system:
+  title: HTTP-FILE
+  logo: ""
+  footer_text: HTTP-FILE
+  footer_link: http://www.github.com/irorikon
+  music_img: https://img.oez.cc/2020/12/19/0f8b57866bdb5.gif
+  script: #自定义脚本,可以是脚本的链接，也可以直接是脚本内容,如document.querySelector('body').style="background-image:url('https://api.mtyqx.cn/api/random.php');background-attachment:fixed"
+  autoplay: true #视频是否自动播放
+  sort: name-descend #列名-排序方向(descend|ascend)
+  preview:
+    text: [
+        txt,
+        htm,
+        html,
+        xml,
+        java,
+        properties,
+        sql,
+        js,
+        md,
+        json,
+        conf,
+        ini,
+        vue,
+        php,
+        py,
+        bat,
+        gitignore,
+        yml,
+        go,
+        sh,
+        c,
+        cpp,
+        h,
+        hpp,
+      ] #要预览的文本文件的后缀，可以自行添加
+  expire: 7200
+server:
+  address: "0.0.0.0"
+  port: "5244"
+  tls: false
+  cert_file: ""
+  key_file: ""
+  prefix: ""
+  search: true
+  download: true
+  static: dist
+  site_url: "*"
+  password: password
+storage:
+  type: local
+  path: "./"
+zap:
+  level: "info"
+  format: "console"
+  prefix: "[github.com/irorikon/http-file]"
+  file_prefix: "http-file"
+  director: "log"
+  encode_level: "LowercaseColorLevelEncoder"
+  stacktrace_key: "stacktrace"
+  max_age: 72
+  show_line: true
+  log_to_console: true
+cors:
+  mode: whitelist # 放行模式: allow-all, 放行全部; whitelist, 白名单模式, 来自白名单内域名的请求添加 cors 头; strict-whitelist 严格白名单模式, 白名单外的请求一律拒绝
+  whitelist:
+    - allow-origin: example1.com
+      allow-headers: content-type
+      allow-methods: GET, POST
+      expose-headers: Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Content-Type
+      allow-credentials: true # 布尔值
+    - allow-origin: example2.com
+      allow-headers: content-type
+      allow-methods: GET, POST
+      expose-headers: Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Content-Type
+      allow-credentials: true # 布尔值
