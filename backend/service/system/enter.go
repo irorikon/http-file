@@ -7,4 +7,5 @@ package system
 
 type ServiceGroup struct {
 	SystemService
+	SiteService
 }

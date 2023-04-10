@@ -1,12 +1,27 @@
 system:
-    title: HTTP-FILE
-    logo: ""
-    footer_text: ""
-    footer_link: ""
+    address: 0.0.0.0
+    port: "5244"
+    tls: false
+    cert_file: ""
+    key_file: ""
+    prefix: ""
+    search: false
+    download: false
+    static: ""
+    site_url: ""
+    password: ""
+    file_download_timeout: 86400
+site:
+    title: 文件管理系统
+    version: "1.0.0"
+    # logo: "https://img.oez.cc/2020/12/19/0f8b57866bdb5.gif"
+    logo: "https://devui.design/components/assets/logo.svg"
+    footer_text: "iRorikon"
+    footer_link: "https://github.com/iRorikon"
     music_img: https://img.oez.cc/2020/12/19/0f8b57866bdb5.gif
     script: ""
     autoplay: true
-    sort: name-descend
+    sort: size-ascend
     preview:
         text:
             - txt
@@ -33,22 +48,12 @@ system:
             - cpp
             - h
             - hpp
+jwt:
     expire: 0
-server:
-    address: 0.0.0.0
-    port: "5244"
-    tls: false
-    cert_file: ""
-    key_file: ""
-    prefix: ""
-    search: false
-    download: false
-    static: ""
-    site_url: ""
-    password: ""
 storage:
     type: local
-    path: ./
+    show_hidden: false
+    path: "C:/Users/irori/Downloads/"
 zap:
     level: debug
     prefix: '[HTTP-FILE]'

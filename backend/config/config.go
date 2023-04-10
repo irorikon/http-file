@@ -46,7 +46,8 @@ const (
 
 type Config struct {
 	System  SystemConfig  `mapstructure:"system" json:"system" yaml:"system"`
-	Server  ServerConfig  `mapstructure:"server" json:"server" yaml:"server"`
+	Site    SiteConfig    `mapstructure:"site" json:"site" yaml:"site"`
+	JWT     JWTConfig     `mapstructure:"jwt" json:"jwt" yaml:"jwt"`
 	Storage StorageConfig `mapstructure:"storage" json:"storage" yaml:"storage"`
 	Zap     ZapConfig     `mapstructure:"zap" json:"zap" yaml:"zap"`
 	CORS    CORSConfig    `mapstructure:"cors" json:"cors" yaml:"cors"`
@@ -54,7 +55,7 @@ type Config struct {
 
 func DefaultConfig() *Config {
 	return &Config{
-		System: SystemConfig{
+		Site: SiteConfig{
 			Title:    "HTTP-FILE",
 			MusicIMG: "https://img.oez.cc/2020/12/19/0f8b57866bdb5.gif",
 			AutoPlay: true,
@@ -88,10 +89,11 @@ func DefaultConfig() *Config {
 				},
 			},
 		},
-		Server: ServerConfig{
-			Address:  "0.0.0.0",
-			Port:     "5244",
-			Password: "",
+		System: SystemConfig{
+			Address:             "0.0.0.0",
+			Port:                "5244",
+			Password:            "",
+			FileDownloadTimeout: 86400,
 		},
 		Storage: StorageConfig{
 			Type:       "local",

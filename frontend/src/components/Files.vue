@@ -6,64 +6,41 @@
 <template>
   <div class="files">
     <div class="files-list" v-contextmenu>
-      <div v-if="isImages && showImages">
-        <ul id="images">
-          <li v-for="image in images" :key="image.name" class="image">
-            <img
-              :src="getFileDownLink(image)"
-              :alt="image.name"
-              loading="lazy"
-            />
-          </li>
-        </ul>
-      </div>
       <a-table
-        v-else
         :columns="columns"
         :data-source="files"
         :pagination="false"
-        rowKey="file_id"
         :customRow="customRow"
-        :loading="filesLoading"
+        :loading="globalStore.loading"
         :scroll="{ x: 'max-content' }"
-        :row-selection="
-          isMultiple
-            ? { selectedRowKeys: selectedRowKeys, onChange: onSelectChange }
-            : null
-        "
+        rowKey="name"
       >
-        <template #name="{ text, record }">
-          <component :is="record.icon" class="file-icon" />
-          {{ text }}
-          <span v-if="record.type === 'file'" class="action">
-            <copy id="action-1" @click="copyFileLink(record)" />
-            <a target="_blank" :href="getFileDownLink(record)">
-              <download class="action" id="action-2"></download>
-            </a>
-          </span>
+        <template #bodyCell="{ text, record, column }">
+          <template v-if="column.dataIndex === 'name'">
+            <component :is="record.icon" class="file-icon" />
+            {{ text }}
+            <span v-if="!record.is_dir" class="action">
+              <!-- <copy id="action-1" @click="copyFileLink(record)" /> -->
+              <copy id="action-1" />
+            </span>
+          </template>
         </template>
       </a-table>
+      <a-modal
+        :visible="showDownloadPanle"
+        ok-text="下载文件"
+        @ok="download(selectFile)"
+        @cancel="showDownloadPanle = false"
+      >
+        <a-result :title="selectFile.name">
+          <template #icon>
+            <smile-twoTone />
+            <component :is="selectFile.icon" />
+          </template>
+        </a-result>
+      </a-modal>
     </div>
     <br />
-    <context-menu>
-      <context-menu-item @click="multipleChoice" :divider="true"
-        >{{ isMultiple ? "✓" : "" }}多选</context-menu-item
-      >
-      <context-menu-submenu :label="'操作'">
-        <context-menu-item :disabled="!isMultiple" @click="download"
-          >下载</context-menu-item
-        >
-        <context-menu-item :disabled="!isMultiple" @click="copyDownloadLink"
-          >复制直链</context-menu-item
-        >
-        <context-menu-item :disabled="!isMultiple" @click="copyTransText"
-          >复制秒传</context-menu-item
-        >
-        <context-menu-item :disabled="!isMultiple" @click="getTransFile"
-          >获取秒传文件</context-menu-item
-        >
-      </context-menu-submenu>
-    </context-menu>
   </div>
 </template>
 <script>
@@ -72,32 +49,39 @@ export default {
 };
 </script>
 <script setup>
-import { FileProps, GlobalDataProps } from "../store";
-import { computed, defineComponent, ref, watch } from "vue";
-import { useStore } from "vuex";
-import { useRouter } from "vue-router";
-import { getFileSize } from "../utils/file_size";
-import { formatDate } from "../utils/date";
-import { getIcon } from "../utils/get_icon";
-import { useDownloadFile } from "../hooks/useDownloadUrl";
-import Viewer from "viewerjs";
-import downloadText from "../utils/downText";
+import { computed, ref } from "vue";
+import { formatDate } from "~/utils/date";
+import { getIcon, getCategory, getFileSize, getFileLink } from "~/utils/common";
 import { message } from "ant-design-vue";
-import { copyToClip } from "../utils/copy_clip";
+import { useSiteStore } from "~/pinia/modules/site";
+import { useGlobalStore } from "~/pinia/modules/global";
+import { useFileStore } from "~/pinia/modules/file";
 
-const store = useStore();
-const router = useRouter();
-const sort = computed(() => store.state.info.sort.split("-") || ["", ""]);
+const siteStore = useSiteStore();
+const globalStore = useGlobalStore();
+const fileStore = useFileStore();
+
+const sort = siteStore.siteInfo.sort.split("-") || ["", ""];
 const columns = [
   {
     align: "left",
     dataIndex: "name",
     title: "文件名称",
-    slots: { customRender: "name" },
+    customRender: (text, record) => {},
     sorter: (a, b) => {
       return a.name < b.name ? 1 : -1;
     },
-    defaultSortOrder: sort.value[0] === "name" ? sort.value[1] : undefined,
+    defaultSortOrder: sort[0] === "name" ? sort[1] : undefined,
+  },
+  {
+    align: "right",
+    dataIndex: "sizeStr",
+    title: "大小",
+    width: 100,
+    sorter: (a, b) => {
+      return a.size - b.size;
+    },
+    defaultSortOrder: sort[0] === "size" ? sort[1] : undefined,
   },
   {
     align: "right",
@@ -107,145 +91,84 @@ const columns = [
     sorter: (a, b) => {
       return a.time < b.time ? 1 : -1;
     },
-    defaultSortOrder: sort.value[0] === "time" ? sort.value[1] : undefined,
+    defaultSortOrder: sort[0] === "time" ? sort[1] : undefined,
   },
 ];
-const filesLoading = computed(() => store.state.loading);
-watch(filesLoading, () => {
-  if (!filesLoading.value && store.state.showImages) {
-    setTimeout(() => {
-      const images = document.getElementById("images");
-      if (images) {
-        new Viewer(images);
-      }
-    }, 100);
-  }
-});
 const files = computed(() => {
-  const data = store.state.data;
+  const data = fileStore.filelist;
   return data.map((item) => {
-    item.time = formatDate(item.update_at);
-    if (item.type == "folder") {
+    item.time = formatDate(item.modified);
+    if (item.is_dir) {
       item.sizeStr = "-";
     } else {
       item.sizeStr = getFileSize(item.size);
     }
     item.icon = getIcon(item);
+    item.category = getCategory(item);
     return item;
   });
 });
-const selectedRowKeys = ref([]);
-const selectedRows = ref([]);
-const customRow = (record, index) => {
+const selectFile = ref(null);
+const showDownloadPanle = ref(false);
+const customRow = (record) => {
   return {
     onClick: (e) => {
       if (e.target && e.target.tagName === "svg") {
         return;
       }
-      selectedRowKeys.value = [];
-      selectedRows.value = [];
-      router.push("/" + record.dir + record.name);
+      if (record.is_dir) {
+        fileStore.getFiles(
+          record.path.split("\\").join("/"),
+          globalStore.storage_type
+        );
+        globalStore.setPaths(record.path.split("\\").join("/"));
+      } else {
+        selectFile.value = record;
+        showDownloadPanle.value = true;
+      }
     },
   };
 };
-const { getFileDownLink, copyFileLink } = useDownloadFile();
-const isImages = computed(() => store.state.isImages);
-const showImages = computed(() => store.state.showImages);
-const images = computed(() =>
-  files.value.filter((item) => item.category === "image")
-);
 
-const onSelectChange = (_selectedRowKeys, _selectedRows) => {
-  selectedRows.value = _selectedRows;
-  selectedRowKeys.value = _selectedRowKeys;
-};
-
-const isMultiple = computed(() => store.state.isMultiple);
-const multipleChoice = () => {
-  store.commit("setIsMultiple", !isMultiple.value);
-};
-const getTransText = () => {
-  let text = "";
-  let containFolder = false;
-  selectedRows.value.forEach((item) => {
-    if (item.type === "folder") {
-      containFolder = true;
-    } else {
-      text += `aliyunpan://${item.name}|${item.content_hash}|${item.size}|${item.content_type}\n`;
-    }
-  });
-  if (containFolder) {
-    message.warn("选择中包含了文件夹,已自动去除.");
+const download = (item) => {
+  if (!item.is_dir) {
+    window.open(getFileLink(item), "_blank");
   }
-  return text;
-};
-const copyDownloadLink = () => {
-  let text = "";
-  let containFolder = false;
-  selectedRows.value.forEach((item) => {
-    if (item.type === "folder") {
-      containFolder = true;
-    } else {
-      text += getFileDownLink(item) + "\n";
-    }
-  });
-  if (containFolder) {
-    message.warn("选择中包含了文件夹,已自动去除.");
-  }
-  copyToClip(text);
-  message.success("已复制直链.");
-};
-
-const copyTransText = () => {
-  copyToClip(getTransText());
-  message.success("已复制秒传文本.");
-};
-const download = () => {
-  selectedRows.value.forEach((item) => {
-    if (item.type === "folder") {
-      window.open(getFileDownLink(item), "_blank");
-    }
-  });
-};
-const getTransFile = () => {
-  const files = selectedRows.value.filter((item) => item.type === "file");
-  if (files.length === 0) {
-    message.error("请选择文件.");
-    return;
-  }
-  downloadText(`${files[0].name}等${files.length}个文件.txt`, getTransText());
+  showDownloadPanle.value = false;
 };
 </script>
-<style lang="sass" scoped>
-.file-icon
-  margin-right: 10px
-  font-size: 20px
-  color: #1890ff
-
-.action
-  color: gray
-
-#images
-  display: grid
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr))
-  list-style: none
-  justify-items: center
-
-.image
-  width: 100px
-  height: 90px
-  cursor: pointer
-  display: flex
-  justify-content: center
-  align-items: center
-  flex-shrink: 0
-  flex-grow: 0
-
-  & img
-    display: block
-    max-width: 100%
-    max-height: 100%
-    border-radius: 5px
-    position: relative
-    box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
+<style lang="scss" scoped>
+.file-icon {
+  margin-right: 10px;
+  font-size: 20px;
+  color: #1890ff;
+}
+.action {
+  color: gray;
+}
+#images {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  /* grid-gap: 24px; */
+  list-style: none;
+  justify-items: center;
+}
+.image {
+  width: 100px;
+  height: 90px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  flex-grow: 0;
+}
+.image img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 5px;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+}
 </style>

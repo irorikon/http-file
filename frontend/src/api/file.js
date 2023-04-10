@@ -1,35 +1,62 @@
-import request from '../utils/request'
+/*
+ * @Author: iRorikon
+ * @Date: 2023-04-06 20:00:21
+ * @FilePath: \http-file\frontend\src\api\file.js
+ */
+import request from '~/utils/request'
 
-export const getFileinfo = (filename, password) => {
+export const getFileinfo = data => {
   return request({
     url: 'file/info',
     method: 'post',
-    data: {
-      filename: filename,
-      password: password
-    }
+    data
   })
 }
 
-export const updateFile = (new_filename, old_filename, password) => {
+export const getFileList = data => {
   return request({
-    url: 'file/update',
+    url: 'file/list',
     method: 'post',
-    data: {
-      new_filename: new_filename,
-      old_filename: old_filename,
-      password: password
-    }
+    data
   })
 }
 
-export const deleteFile = (password, filename) => {
+export const renameFile = data => {
   return request({
-    url: 'file/delete',
+    url: 'file/copy',
     method: 'post',
-    data: {
-      filename: filename,
-      password: password
-    }
+    data
+  })
+}
+
+export const removeFile = data => {
+  return request({
+    url: 'file/remove',
+    method: 'post',
+    data
+  })
+}
+
+export const copyFile = data => {
+  return request({
+    url: 'file/copy',
+    method: 'post',
+    data
+  })
+}
+
+export const moveFile = data => {
+  return request({
+    url: 'file/move',
+    method: 'post',
+    data
+  })
+}
+
+export const searchFile = data => {
+  return request({
+    url: 'file/search',
+    method: 'post',
+    data
   })
 }

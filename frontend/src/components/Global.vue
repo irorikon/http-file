@@ -47,14 +47,20 @@ darkMedia.onchange = () => {
 };
 change();
 </script>
-<style lang="sass" scoped>
-#global
-  position: fixed
-  top: 50%
-  transform: translate(0, -50%)
-  right: 5px
-  z-index: 999
-
-.icon
-  font-size: 25px
+<style lang="scss" scoped>
+#global {
+  position: fixed;
+  top: 50%;
+  transform: translate(0, -50%);
+  right: 5px;
+  z-index: 999;
+}
+.icon {
+  font-size: 25px;
+}
+/* @media screen and (max-width: 1000px) {
+    #global {
+      display: none;
+    }
+  } */
 </style>

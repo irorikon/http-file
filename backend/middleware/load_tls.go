@@ -17,7 +17,7 @@ func LoadTLS() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		middleware := secure.New(secure.Options{
 			SSLRedirect: true,
-			SSLHost:     fmt.Sprintf("%s:443", config.CFG.Server.Address),
+			SSLHost:     fmt.Sprintf("%s:443", config.CFG.System.Address),
 		})
 		err := middleware.Process(c.Writer, c.Request)
 		if err != nil {

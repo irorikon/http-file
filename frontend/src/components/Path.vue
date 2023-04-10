@@ -5,36 +5,23 @@
 -->
 <template>
   <div class="path">
-    <router-link :to="'/' + routes[0].path">
-      <home style="margin-right: 10px" />
-    </router-link>
-    <a-breadcrumb :routes="routes">
-      <template #itemRender="{ route, routes, paths }">
-        <span
-          v-if="routes.indexOf(route) === 0"
-          :to="`/${paths.join('/')}`"
-          class="path-item"
-        >
-          <!-- <home style="margin-right: 1px;"/> -->
-          {{ route.breadcrumbName }}
-        </span>
-        <router-link
-          v-else-if="routes[0].children.indexOf(route) !== -1"
-          :to="`/${paths[1]}`"
-          class="path-item"
-        >
-          {{ route.breadcrumbName }}
-        </router-link>
-        <span
-          v-else-if="!q && routes.indexOf(route) === routes.length - 1"
-          class="path-item"
-        >
-          {{ route.breadcrumbName }}
-        </span>
-        <router-link v-else :to="`/${paths.join('/')}`" class="path-item">
-          {{ route.breadcrumbName }}
-        </router-link>
-      </template>
+    <a-breadcrumb-item href="">
+      <home style="margin-right: 10px" @click="defaultPath" />
+    </a-breadcrumb-item>
+    <a-breadcrumb>
+      <a-breadcrumb-item
+        v-for="(value, index) in globalStore.paths"
+        :key="index"
+      >
+        <a :selectPath="index" @click="changePath(index)">{{ value }}</a>
+        <!-- <template #overlay v-if="isNotEmpty(value)">
+          <a-menu>
+            <a-menu-item v-for="(i, j) in value" :key="j">
+              <a @click="changePath">{{ i }}</a>
+            </a-menu-item>
+          </a-menu>
+        </template> -->
+      </a-breadcrumb-item>
     </a-breadcrumb>
   </div>
 </template>
@@ -45,42 +32,51 @@ export default {
 };
 </script>
 <script setup>
-import store from "../store";
-import { computed, defineComponent } from "vue";
-import { useRoute } from "vue-router";
+import { onMounted, ref } from "vue";
+import { isNotEmpty } from "~/utils/common";
+import { useGlobalStore } from "~/pinia/modules/global";
+import { useFileStore } from "~/pinia/modules/file";
 
-const route = useRoute();
-const q = computed(() => route.query.q);
-const routes = computed(() => {
-  const paths = decodeURI(route.fullPath.substring(1)).split("?")[0].split("/");
-  if (!paths) {
-    return [{ path: "/", breadcrumbName: "home" }];
+const globalStore = useGlobalStore();
+const fileStore = useFileStore();
+
+const selectPath = ref("");
+
+// 查询文件目录
+const searchFileList = (path) => {
+  fileStore.getFiles(path, globalStore.storage_type);
+  globalStore.setPaths("/");
+  globalStore.setPaths(path.split("\\").join("/"));
+};
+
+// 根据用户点击切换目录列表
+const changePath = (e) => {
+  searchFileList(globalStore.paths.slice(0, e + 1).join("/"));
+};
+
+// 查询默认文件目录
+const defaultPath = () => {
+  selectPath.value = "/";
+  searchFileList(selectPath.value);
+};
+onMounted(() => {
+  if (!isNotEmpty(globalStore.storage_type)) {
+    globalStore.setStorageType("local");
   }
-  const res = paths.map((item) => {
-    return {
-      path: item,
-      breadcrumbName: item,
-    };
-  });
-  res[0].children =
-    store.state.info.roots?.map((item) => {
-      return {
-        path: item,
-        breadcrumbName: item,
-      };
-    }) || [];
-  return res;
+  defaultPath();
 });
 </script>
-<style lang="sass" scoped>
-.path
-  margin: 2px 2px
-  padding: 2px
-  display: flex
-  display: -webkit-flex
-  font-size: 20px
-  align-items: center
-
-  &-item
-    color: var(--textColor, black)
+<style lang="scss" scoped>
+.path {
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04); */
+  margin: 2px 2px;
+  padding: 2px;
+  display: flex;
+  display: -webkit-flex;
+  font-size: 20px;
+  align-items: center;
+}
+.path-item {
+  color: var(--textColor, black);
+}
 </style>

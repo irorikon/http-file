@@ -104,3 +104,9 @@ export const Base64 = {
     return string
   }
 }
+
+export const encodePath = file => {
+  let timestamp = Date.now()
+  let filepath = file.path.substring(1, file.path.length)
+  return Base64.encode(filepath + parseInt(timestamp / 1000))
+}

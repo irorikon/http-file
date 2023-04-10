@@ -23,22 +23,24 @@ import {
 } from 'ant-design-vue'
 
 import {
-  QrcodeOutlined,
+  LockOutlined,
+  UserOutlined,
   HomeOutlined,
-  WindowsFilled,
-  FileExcelFilled,
-  FileMarkdownFilled,
-  FilePdfFilled,
-  FilePptFilled,
-  FileWordFilled,
-  FileZipFilled,
-  AndroidFilled,
-  AppleFilled,
-  FileImageFilled,
-  FileTextFilled,
-  YoutubeFilled,
-  CustomerServiceFilled,
-  FileFilled,
+  WindowsOutlined,
+  FileExcelOutlined,
+  FileMarkdownOutlined,
+  FilePdfOutlined,
+  FilePptOutlined,
+  FileWordOutlined,
+  FileZipOutlined,
+  FileJpgOutlined,
+  AndroidOutlined,
+  AppleOutlined,
+  FileImageOutlined,
+  FileTextOutlined,
+  YoutubeOutlined,
+  CustomerServiceOutlined,
+  FileOutlined,
   FolderFilled,
   CopyOutlined,
   DownloadOutlined,
@@ -46,15 +48,10 @@ import {
 } from '@ant-design/icons-vue'
 
 import 'ant-design-vue/dist/antd.css'
-import VMdPreview from '@kangc/v-md-editor/lib/preview'
-import '@kangc/v-md-editor/lib/style/preview.css'
-
-import vuepressTheme from '@kangc/v-md-editor/lib/theme/vuepress.js'
-import '@kangc/v-md-editor/lib/theme/style/vuepress.css'
 import './assets/global.css'
 import App from './App.vue'
 import router from './router'
-import store from './store'
+import store from './pinia'
 
 import contextmenu from 'vue3-contextmenu'
 import 'vue3-contextmenu/dist/vue3-contextmenu.css'
@@ -62,8 +59,6 @@ import 'vue3-contextmenu/dist/vue3-contextmenu.css'
 const app = createApp(App)
 
 app.use(contextmenu)
-VMdPreview.use(vuepressTheme)
-app.use(VMdPreview)
 app.use(Button)
 app.use(Divider)
 app.use(Tag)
@@ -78,27 +73,41 @@ app.use(Popover)
 app.use(Space)
 app.use(Switch)
 app.use(ConfigProvider)
-app.component('qr-code', QrcodeOutlined)
+app.component('lock-outlined', LockOutlined)
+app.component('user-outlined', UserOutlined)
 app.component('home', HomeOutlined)
-app.component('windows', WindowsFilled)
-app.component('file-excel', FileExcelFilled)
-app.component('file-markdown', FileMarkdownFilled)
-app.component('file-pdf', FilePdfFilled)
-app.component('file-ppt', FilePptFilled)
-app.component('file-word', FileWordFilled)
-app.component('file-zip', FileZipFilled)
-app.component('android', AndroidFilled)
-app.component('apple', AppleFilled)
-app.component('file-image', FileImageFilled)
-app.component('file-text', FileTextFilled)
-app.component('youtube', YoutubeFilled)
-app.component('customer-service', CustomerServiceFilled)
-app.component('file', FileFilled)
+app.component('windows', WindowsOutlined)
+app.component('file-excel', FileExcelOutlined)
+app.component('file-markdown', FileMarkdownOutlined)
+app.component('file-pdf', FilePdfOutlined)
+app.component('file-ppt', FilePptOutlined)
+app.component('file-word', FileWordOutlined)
+app.component('file-zip', FileZipOutlined)
+app.component('android', AndroidOutlined)
+app.component('apple', AppleOutlined)
+app.component('file-image', FileImageOutlined)
+app.component('file-jpg', FileJpgOutlined)
+app.component('file-text', FileTextOutlined)
+app.component('youtube', YoutubeOutlined)
+app.component('customer-service', CustomerServiceOutlined)
+app.component('file', FileOutlined)
 app.component('folder', FolderFilled)
 app.component('copy', CopyOutlined)
 app.component('download', DownloadOutlined)
 app.component('retweet', RetweetOutlined)
 
-app.use(store).use(router).mount('#app')
+/**
+ * @description 导入加载进度条，防止首屏加载时间过长，用户等待
+ *
+ * */
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+NProgress.configure({ showSpinner: false, ease: 'ease', speed: 500 })
+NProgress.start()
+window.addEventListener('load', () => {
+  NProgress.done()
+})
+
+app.use(NProgress).use(store).use(router).mount('#app')
 
 export default app

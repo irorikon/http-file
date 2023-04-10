@@ -6,6 +6,7 @@
 package util
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -13,7 +14,9 @@ import (
 	"path/filepath"
 	"reflect"
 	"strings"
+	"time"
 
+	"github.com/h2non/filetype"
 	"github.com/irorikon/http-file/config"
 )
 
@@ -187,4 +190,62 @@ func CopyDir(src, dst string) error {
 		}
 	}
 	return nil
+}
+
+// @function: FileType
+// @description: 文件类型判断
+func FileType(path string) (extension, mime string, err error) {
+	// Open a file descriptor
+	file, err := os.Open(path)
+	if err != nil {
+		return "", "", err
+	}
+	defer file.Close()
+	// We only have to pass the file header = first 261 bytes
+	head := make([]byte, 261)
+	_, err = file.Read(head)
+	if err != nil {
+		return "", "", err
+	}
+	kind, err := filetype.Match(head)
+	if err != nil {
+		return "", "", err
+	} else if kind == filetype.Unknown {
+		return "unknown", "", err
+	}
+	return kind.Extension, kind.MIME.Value, nil
+}
+
+// @function: FileExtension
+// @description: 获取文件后缀
+func FileExtension(filename string) string {
+	if filename != "" {
+		ext := path.Ext(filename)
+		if ext != "" {
+			return strings.Split(ext, ".")[1]
+		}
+	}
+	return ""
+}
+
+// @function: FileDownloadDecode
+// @description: 解码 URL
+func FileDownloadDecode(url string) (filename string, err error) {
+	if url == "" {
+		return "", errors.New("url is empty")
+	}
+	d, err := Base64Decode(url)
+	if err != nil {
+		return "", err
+	}
+	t := d[len(d)-10:]
+	timestampFromURL, err := StringToInt64(t)
+	if err != nil {
+		return "", err
+	}
+	timestampNow := time.Now().Unix()
+	if timestampNow-timestampFromURL > config.CFG.System.FileDownloadTimeout {
+		return "", errors.New("download link timeout expires")
+	}
+	return d[:len(d)-10], nil
 }

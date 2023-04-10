@@ -29,3 +29,9 @@ export const formatDate = dateStr => {
     minute
   )}:${full(second)}`
 }
+
+export const sleep = time => {
+  return new Promise(resolve => {
+    setTimeout(resolve, time)
+  })
+}

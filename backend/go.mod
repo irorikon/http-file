@@ -6,6 +6,7 @@ require (
 	github.com/fsnotify/fsnotify v1.6.0
 	github.com/fvbock/endless v0.0.0-20170109170031-447134032cb6
 	github.com/gin-gonic/gin v1.9.0
+	github.com/h2non/filetype v1.1.3
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
 	github.com/shirou/gopsutil/v3 v3.23.3
 	github.com/songzhibin97/gkit v1.2.9

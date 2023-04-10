@@ -67,7 +67,7 @@ func Viper(path ...string) *viper.Viper {
 		fmt.Println(err)
 	}
 	config.BlackCache = local_cache.NewCache(
-		local_cache.SetDefaultExpire(time.Second * time.Duration(config.CFG.System.Expire)),
+		local_cache.SetDefaultExpire(time.Second * time.Duration(config.CFG.JWT.Expire)),
 	)
 	return v
 }

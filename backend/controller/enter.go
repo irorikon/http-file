@@ -17,8 +17,8 @@ var (
 )
 
 type ControllerGroup struct {
-	SystemController system.ControllerGroup
-	FileController   storage.ControllerGroup
+	System system.ControllerGroup
+	File   storage.ControllerGroup
 }
 
 var ControllerAPP = new(ControllerGroup)

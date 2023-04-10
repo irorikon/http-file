@@ -6,5 +6,6 @@
 package storage
 
 type ServiceGroup struct {
+	StorageService
 	LocalStorageService
 }

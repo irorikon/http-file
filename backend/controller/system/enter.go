@@ -9,8 +9,10 @@ import "github.com/irorikon/http-file/service"
 
 type ControllerGroup struct {
 	SystemController
+	SiteController
 }
 
 var (
 	systemService = service.ServiceGroupAPP.SystemServiceGroup.SystemService
+	siteService   = service.ServiceGroupAPP.SystemServiceGroup.SiteService
 )

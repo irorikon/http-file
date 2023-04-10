@@ -1,7 +1,7 @@
 /*
  * @Author: iRorikon
- * @Date: 2023-04-05 21:28:52
- * @FilePath: \http-file\backend\service\storage\local.go
+ * @Date: 2023-04-07 10:08:03
+ * @FilePath: \http-file\backend\service\storage\local_storage.go
  */
 package storage
 
@@ -20,7 +20,7 @@ import (
 
 type LocalStorageService struct{}
 
-func (l *LocalStorageService) List(path string) ([]*model.File, error) {
+func (l *LocalStorageService) GetFileList(path string) ([]*model.File, error) {
 	fullPath := filepath.Join(config.CFG.Storage.Path, path)
 	rawFiles, err := readDir(fullPath)
 	if err != nil {
@@ -28,14 +28,27 @@ func (l *LocalStorageService) List(path string) ([]*model.File, error) {
 	}
 	var Files []*model.File
 	for _, f := range rawFiles {
+		var fileType string
+		var fileMIME string
+		var ext string
 		if !config.CFG.Storage.ShowHidden && strings.HasPrefix(f.Name(), ".") {
 			continue
+		}
+		if !f.IsDir() {
+			fullFilePath := filepath.Join(fullPath, f.Name())
+			fileType, fileMIME, err = util.FileType(fullFilePath)
+			if err != nil {
+				return nil, err
+			}
+			ext = util.FileExtension(f.Name())
 		}
 		Files = append(Files, &model.File{
 			Name:     f.Name(),
 			Path:     filepath.Join(path, f.Name()),
 			Size:     f.Size(),
-			Type:     f.Mode().String(),
+			Type:     fileType,
+			MIME:     fileMIME,
+			Ext:      ext,
 			IsDir:    f.IsDir(),
 			Modified: f.ModTime(),
 		})
@@ -43,23 +56,36 @@ func (l *LocalStorageService) List(path string) ([]*model.File, error) {
 	return Files, nil
 }
 
-func (l *LocalStorageService) Get(path string) (*model.File, error) {
+func (l *LocalStorageService) GetFileInfo(path string) (*model.File, error) {
 	fullPath := filepath.Join(config.CFG.Storage.Path, path)
 	f, err := os.Stat(fullPath)
 	if err != nil {
 		return nil, err
 	}
-	var Fileinfo *model.File
+	var ext string
+	var fileType string
+	var fileMIME string
+	var size int64
 	if f.IsDir() {
-		Fileinfo.Size = 0
+		size = 0
 	} else {
-		Fileinfo.Size = f.Size()
+		size = f.Size()
+		ext = util.FileExtension(fullPath)
+		fileType, fileMIME, err = util.FileType(fullPath)
+		if err != nil {
+			return nil, err
+		}
 	}
-	Fileinfo.Name = f.Name()
-	Fileinfo.Path = path
-	Fileinfo.IsDir = f.IsDir()
-	Fileinfo.Modified = f.ModTime()
-	return Fileinfo, nil
+	return &model.File{
+		Name:     f.Name(),
+		Path:     path,
+		Size:     size,
+		Type:     fileType,
+		MIME:     fileMIME,
+		Ext:      ext,
+		IsDir:    f.IsDir(),
+		Modified: f.ModTime(),
+	}, nil
 }
 
 func (l *LocalStorageService) MakeDir(path string) error {
@@ -102,6 +128,44 @@ func (l *LocalStorageService) Remove(path string) error {
 	} else {
 		return os.Remove(fullPath)
 	}
+}
+
+func (l *LocalStorageService) Search(path string, search string) ([]*model.File, error) {
+	fullPath := filepath.Join(config.CFG.Storage.Path, path)
+	rawFiles, err := readDir(fullPath)
+	if err != nil {
+		return nil, err
+	}
+	var Files []*model.File
+	for _, f := range rawFiles {
+		var fileType string
+		var fileMIME string
+		var ext string
+		if !config.CFG.Storage.ShowHidden && strings.HasPrefix(f.Name(), ".") {
+			continue
+		}
+		if !f.IsDir() {
+			fullFilePath := filepath.Join(fullPath, f.Name())
+			fileType, fileMIME, err = util.FileType(fullFilePath)
+			if err != nil {
+				return nil, err
+			}
+			ext = util.FileExtension(f.Name())
+		}
+		if strings.Contains(strings.ToLower(f.Name()), strings.ToLower(search)) {
+			Files = append(Files, &model.File{
+				Name:     f.Name(),
+				Path:     filepath.Join(path, f.Name()),
+				Size:     f.Size(),
+				Type:     fileType,
+				MIME:     fileMIME,
+				Ext:      ext,
+				IsDir:    f.IsDir(),
+				Modified: f.ModTime(),
+			})
+		}
+	}
+	return Files, nil
 }
 
 // func (l *LocalStorage) Upload(path string) error {

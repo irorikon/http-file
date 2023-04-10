@@ -7,37 +7,21 @@ package request
 
 import "github.com/irorikon/http-file/config"
 
+type FileReq struct {
+	StorageType string `json:"storage_type"`
+	Path        string `json:"path"`
+	NewPath     string `json:"new_path"`
+	Filename    string `json:"filename"`
+	Keyword     string `json:"keyword"`
+}
+
 type DownloadReq struct {
-	Password string `json:"password"`
-}
-
-type GetReq struct {
-	Path     string `json:"path"`
-	Password string `json:"password"`
-}
-
-type OfficePreviewReq struct {
-	FileID string `json:"file_id"`
-}
-
-type PathReq struct {
-	Path     string `json:"path"`
-	Password string `json:"password"`
-}
-
-type ProxyReq struct {
 	Password string `json:"password"`
 }
 
 type SearchReq struct {
 	Keyword string `json:"keyword"`
 	Dir     string `json:"dir"`
-}
-
-type RebuildTreeReq struct {
-	Path     string `json:"path"`
-	Password string `json:"password"`
-	Depth    int    `json:"depth"`
 }
 
 type VideoPreviewReq struct {
