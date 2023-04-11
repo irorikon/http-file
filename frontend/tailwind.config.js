@@ -1,3 +1,8 @@
+/*
+ * @Author: iRorikon
+ * @Date: 2023-04-06 20:31:05
+ * @FilePath: \http-file\frontend\tailwind.config.js
+ */
 /** @type {import('tailwindcss').Config} */
 export default {
   // important: true,
@@ -18,6 +23,6 @@ export default {
   },
   variants: {
     extend: {}
-  },
-  plugins: [require('@tailwindcss/line-clamp')]
+  }
+  // plugins: [require('@tailwindcss/line-clamp')]
 }

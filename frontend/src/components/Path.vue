@@ -13,14 +13,12 @@
         v-for="(value, index) in globalStore.paths"
         :key="index"
       >
-        <a :selectPath="index" @click="changePath(index)">{{ value }}</a>
-        <!-- <template #overlay v-if="isNotEmpty(value)">
-          <a-menu>
-            <a-menu-item v-for="(i, j) in value" :key="j">
-              <a @click="changePath">{{ i }}</a>
-            </a-menu-item>
-          </a-menu>
-        </template> -->
+        <a
+          :selectPath="index"
+          @click="changePath(index)"
+          style="font-size: 17px"
+          >{{ value }}</a
+        >
       </a-breadcrumb-item>
     </a-breadcrumb>
   </div>
@@ -73,7 +71,7 @@ onMounted(() => {
   padding: 2px;
   display: flex;
   display: -webkit-flex;
-  font-size: 20px;
+  font-size: 18px;
   align-items: center;
 }
 .path-item {

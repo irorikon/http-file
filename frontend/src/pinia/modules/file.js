@@ -5,18 +5,13 @@
  */
 import { defineStore } from 'pinia'
 import { useGlobalStore } from '~/pinia/modules/global'
-import { useSiteStore } from '~/pinia/modules/site'
+import NProgress from 'nprogress'
 import { getFileList, getFileinfo } from '~/api/file'
 
 export const useFileStore = defineStore('file', {
   state: () => ({
     filelist: [],
-    file: {},
-    audio: {
-      name: '',
-      url: '',
-      cover: ''
-    }
+    file: {}
   }),
   actions: {
     setFilelist (filelist) {
@@ -25,16 +20,8 @@ export const useFileStore = defineStore('file', {
     setFile (file) {
       this.file = file
     },
-    setAudio (audio) {
-      this.audio = {
-        name: audio.name,
-        url: backendUrl + 'v/' + encodeURI(file.dir + file.name),
-        cover:
-          useSiteStore.siteInfo.music_img ||
-          'https://img.oez.cc/2020/12/19/0f8b57866bdb5.gif'
-      }
-    },
     async getFiles (path, storageType) {
+      NProgress.start()
       const globalStore = useGlobalStore()
       // 获取文件列表
       globalStore.setLoading(true)
@@ -48,6 +35,7 @@ export const useFileStore = defineStore('file', {
         globalStore.setLoading(false)
         // 清空缓存
         this.setFile({})
+        NProgress.done()
       }
     },
     async getFile (path, storageType) {

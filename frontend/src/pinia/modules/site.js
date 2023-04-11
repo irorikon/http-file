@@ -7,21 +7,16 @@
 import { defineStore } from 'pinia'
 import { getSiteConfig } from '~/api/system'
 import loadJS from '~/utils/load_js'
-import { ref } from 'vue'
 
 export const useSiteStore = defineStore('site', {
   state: () => ({
     siteInfo: {
       title: '',
-      version: '',
       logo: '',
       footer_text: '',
       footer_link: '',
-      music_img: '',
       script: '',
-      autoplay: false,
-      sort: 'size-ascend',
-      preview: []
+      sort: 'size-ascend'
     }
   }),
   actions: {
@@ -37,7 +32,7 @@ export const useSiteStore = defineStore('site', {
           await loadJS(res.data.script)
         }
         if (!res.data.logo) {
-          res.data.logo = 'src/assets/alist.png'
+          res.data.logo = './static/alist.png'
         }
         this.setSiteInfo(res.data)
       }

@@ -34,7 +34,6 @@
       >
         <a-result :title="selectFile.name">
           <template #icon>
-            <smile-twoTone />
             <component :is="selectFile.icon" />
           </template>
         </a-result>

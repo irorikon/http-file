@@ -30,16 +30,16 @@ export default defineConfig(env => {
       port: process.env.VITE_BASE_PORT, // 端口号
       open: true, // 自动打开浏览器
       cors: true, // 跨域设置允许
-      strictPort: true, // 如果端口已占用直接退出
+      strictPort: true // 如果端口已占用直接退出
       // 接口代理
-      proxy: {
-        '/api': {
-          // 本地 8000 前端代码的接口 代理到 8888 的服务端口
-          target: 'http://localhost:5244/',
-          changeOrigin: true, // 允许跨域
-          rewrite: path => path.replace('/api/', '/')
-        }
-      }
+      // proxy: {
+      //   '/api': {
+      //     // 本地 8000 前端代码的接口 代理到 8888 的服务端口
+      //     target: 'http://localhost:5244/',
+      //     changeOrigin: true, // 允许跨域
+      //     rewrite: path => path.replace('/api/', '/')
+      //   }
+      // }
     },
     build: {
       reportCompressedSize: false,
@@ -50,22 +50,11 @@ export default defineConfig(env => {
       // 静态资源打包到dist下的不同目录
       rollupOptions: {
         output: {
-          chunkFileNames: 'static/js/[name]-[hash].js',
-          entryFileNames: 'static/js/[name]-[hash].js',
-          assetFileNames: 'static/[ext]/[name]-[hash].[ext]'
+          chunkFileNames: 'static/js/[hash].js',
+          entryFileNames: 'static/js/[hash].js',
+          assetFileNames: 'static/[ext]/[hash].[ext]'
         }
       }
     }
-    // css: {
-    //   preprocessorOptions: {
-    //     // 全局引入了 scss 的文件
-    //     scss: {
-    //       additionalData: `
-    //       @import "@/assets/styles/variables.scss";
-    //     `,
-    //       javascriptEnabled: true
-    //     }
-    //   }
-    // }
   }
 })

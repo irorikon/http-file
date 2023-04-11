@@ -11,13 +11,13 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: () => import(/* webpackChunkName: "home" */ '~/views/Home.vue')
+    component: () => import('~/views/Home.vue')
   },
   ...exceptionRoutes
 ]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(),
   routes
 })
 

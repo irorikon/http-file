@@ -31,9 +31,8 @@ func Routers() *gin.Engine {
 
 	systemRouter := RouterGroupApp.System
 	fileRouter := RouterGroupApp.File
-	Router.LoadHTMLGlob("./templates/*.html") // npm打包成dist的路径
-	Router.Static("/favicon.ico", "./templates/favicon.ico")
-	Router.Static("/assets", "./templates/assets")   // dist里面的静态资源
+	Router.LoadHTMLGlob("./templates/*.html")        // npm打包成dist的路径
+	Router.Static("/static", "./templates/static")   // dist里面的静态资源
 	Router.StaticFile("/", "./templates/index.html") // 前端网页入口页面
 
 	// TLS

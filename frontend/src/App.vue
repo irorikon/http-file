@@ -5,10 +5,8 @@
 -->
 <template>
   <a-config-provider :locale="locale">
-    <div id="app">
-      <global />
-      <router-view />
-    </div>
+    <global />
+    <router-view />
   </a-config-provider>
 </template>
 
