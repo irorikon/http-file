@@ -16,4 +16,4 @@
 frontend/node_modules/*
 backend/log/*
 backend/logs/*
-.backend/config.*
+backend/config.*
