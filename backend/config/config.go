@@ -13,6 +13,7 @@ import (
 
 var (
 	ConfigFile string
+	Root       string
 	Version    bool
 	CFG        *Config
 	Log        *zap.Logger
@@ -54,10 +55,19 @@ type Config struct {
 }
 
 func DefaultConfig() *Config {
+	var root string
+	if Root != "" {
+		root = Root
+	} else {
+		root = "./"
+	}
 	return &Config{
 		Site: SiteConfig{
-			Title: "HTTP-FILE",
-			Sort:  "name-descend",
+			Title:      "HTTP-FILE",
+			Logo:       "https://devui.design/components/assets/logo.svg",
+			FooterText: "iRorikon",
+			FooterLink: "https://github.com/irorikon/http-file",
+			Sort:       "size-ascend",
 		},
 		System: SystemConfig{
 			Address:             "0.0.0.0",
@@ -68,10 +78,10 @@ func DefaultConfig() *Config {
 		Storage: StorageConfig{
 			Type:       "local",
 			ShowHidden: false,
-			Path:       "./",
+			Path:       root,
 		},
 		Zap: ZapConfig{
-			Level:         "debug",
+			Level:         "info",
 			Prefix:        "[HTTP-FILE]",
 			Format:        "json",
 			Director:      "logs",

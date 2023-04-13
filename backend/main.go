@@ -18,6 +18,8 @@ import (
 func init() {
 	flag.StringVar(&config.ConfigFile, "config-file", "", "Password.")
 	flag.StringVar(&config.ConfigFile, "c", "", "Password.")
+	flag.StringVar(&config.Root, "root", "", "Root Path.")
+	flag.StringVar(&config.Root, "r", "", "Root Path.")
 	flag.BoolVar(&config.Version, "v", false, "Show version and exit.")
 	flag.BoolVar(&config.Version, "version", false, "Show version and exit.")
 	flag.Usage = usage
@@ -28,6 +30,7 @@ Usage: http-file [option]
 
 Optionnal parameters:
   -c, --config-file     Path to config file.
+  -r, --root            Root Path.
   -v, --version         Show version and exit.
   -h, --help            Show this help.
 `
@@ -45,6 +48,7 @@ func main() {
 	}
 	// 初始化Viper
 	config.Viper = initialize.Viper()
+
 	// 初始化zap日志库
 	config.Log = initialize.Zap()
 	// 运行服务器

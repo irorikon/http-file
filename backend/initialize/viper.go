@@ -37,11 +37,10 @@ func Viper(path ...string) *viper.Viper {
 	if !util.FileExist(c) {
 		fmt.Printf("file not exist: %s", c)
 		// 文件不存在，创建文件
-		f, err := util.CreatNestedFile(c)
+		err := viper.WriteConfigAs(c)
 		if err != nil {
 			panic(err)
 		}
-		defer f.Close()
 		err = util.WriteYamlToFile(c, config.DefaultConfig())
 		if err != nil {
 			panic(err)
@@ -53,7 +52,7 @@ func Viper(path ...string) *viper.Viper {
 	v.SetConfigType("yaml")
 	err := v.ReadInConfig()
 	if err != nil {
-		panic(fmt.Errorf("Fatal error config file: %s \n", err))
+		panic(fmt.Errorf("fatal error config file: %s", err))
 	}
 	v.WatchConfig()
 
